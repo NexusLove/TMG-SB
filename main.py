@@ -115,9 +115,9 @@ clear()
 
 
 #<--------------Load Start-------------->
-@bot.event
-async def on_ready():
+def loadcogs():
     bot.load_extension("cogs.maincommands")
+loadcogs()
 #<--------------Load End-------------->
 
 
