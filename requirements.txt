@@ -1,0 +1,16 @@
+discord
+asyncio
+colorama
+aiohttp
+datetime
+psutil
+pyfiglet
+Figlet
+Image
+keyboard
+pyfiglet
+colorama
+Fore
+Figlet
+requests 
+
