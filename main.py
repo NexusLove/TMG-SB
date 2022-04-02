@@ -1,4 +1,3 @@
-#<--------------Imports Start-------------->
 import discord
 import asyncio
 import colorama
@@ -20,30 +19,28 @@ from discord.ext import commands
 from discord.ext.commands import Bot
 from discord.ext.commands import has_permissions, MissingPermissions
 from os.path import exists
-
+from _thread import *
+from win10toast import ToastNotifier
 import multiprocessing
 import keyboard
 import base64
-
 import utils.clear
 from utils.clear import *
-
 from colorama import Fore, Back, Style
 try:
     import pyfade
 except ImportError:
     subprocess.check_call([sys.executable, "-m", "pip", "install", 'pyfade'])
-#<--------------Imports End-------------->
 
+toast = ToastNotifier()
 
-#<--------------Config Start-------------->
 configfile = 'config.json'
-#<--------------Config End-------------->
 
+counter = 0
 
-#<--------------Prefix Start-------------->
 def inputprefix():
-    sys.pycache_prefix = input(pyfade.Fade.Horizontal(pyfade.Colors.col, f"Input Prefix: "))
+    sys.pycache_prefix = input(pyfade.Fade.Horizontal(
+        pyfade.Colors.col, f"Input Prefix: "))
 
     data = {
         "prefix": prefix
@@ -61,10 +58,7 @@ else:
         data = json.load(f)
 
 prefix = data["prefix"]
-#<--------------Prefix End-------------->
 
-
-#<--------------Token Start-------------->
 def inputtoken():
     token = input(pyfade.Fade.Horizontal(pyfade.Colors.col, f"Input Token: "))
 
@@ -77,7 +71,6 @@ def inputtoken():
 
     return data
 
-
 if not exists(configfile):
     data = inputtoken()
 else:
@@ -85,51 +78,27 @@ else:
         data = json.load(f)
 
 token = data["token"]
-#<--------------Token End-------------->
 
 
-#<--------------Prefix Start-------------->
-bot = commands.Bot(command_prefix = prefix, self_bot = True, help_command=None)
-#<--------------Prefix End-------------->
+bot = commands.Bot(command_prefix=prefix, self_bot=True, help_command=None)
 
 
-#<--------------Config Start-------------->
-configfile = 'config.json'
-#<--------------Config End-------------->
-
-
-#<--------------Intents Start-------------->
 intents = discord.Intents().default()
 intents.members = True
 client = discord.Client(intents=intents)
-#<--------------Intents End-------------->
 
 
-#<--------------Booting Start-------------->
 print(f"Booting TMG SB")
 time.sleep(1.0)
 print(f"{Fore.RED}Made by WolvTMG")
 time.sleep(1.0)
 clear()
-#<--------------Booting End-------------->
 
-
-#<--------------Load Start-------------->
-def loadcogs():
+def load():
     bot.load_extension("cogs.maincommands")
-loadcogs()
-#<--------------Load End-------------->
 
-
-#<--------------Cogs Start-------------->
-# for filename in os.listdir('./cogs'):
-#     if filename.endswith('.py'):
-#         bot.load_extension(f'cogs.{filename[:-3]}')
-#<--------------Cogs End-------------->
-
-
-#<--------------Menu Start-------------->
 def menu():
+    global counter
     print(colorama.Fore.RED + f"""
             ████████╗███╗   ███╗ ██████╗               ███╗   ███╗██╗██████╗ ██╗   ██╗██╗████████╗███████╗
             ╚══██╔══╝████╗ ████║██╔════╝               ████╗ ████║██║██╔══██╗██║   ██║██║╚══██╔══╝██╔════╝
@@ -141,41 +110,54 @@ def menu():
     {colorama.Fore.RED}                                             Made by {colorama.Fore.YELLOW}WolvTMG#0766
     {colorama.Fore.RED}                                            Logged in as {colorama.Fore.RED}{bot.user} {colorama.Fore.RED}(ID:{colorama.Fore.RED}{colorama.Fore.RED})
 
-                                [1] Coming soon  | [2] Coming soon  | [3] Join Discord
+                                [1] Start Script | [2] Coming soon  | [3] Join Discord
                                 [4] Coming soon  | [5] Coming soon  | [6] Coming soon
                                 [7] Coming soon  | [8] Coming soon  | [9] Exit script
         """)
 
 
-    # select = input(f"{Fore.RED}                                                      Choice: ")
-    # if select == '1':
-    #     clear(); menu()
-    # elif select == '2':
-    #     clear(); menu()
-    # elif select == '3':
-    #     print(".gg/uYCeDP3")
-    #     time.sleep(5)
-    #     clear(); menu()
-    # elif select == '4':
-    #     clear(); menu()
-    # elif select == '5':
-    #     clear(); menu()
-    # elif select == '6':
-    #     clear(); menu()
-    # elif select == '7':
-    #     clear(); menu()
-    # elif select == '8':
-    #     clear(); menu()
-    # elif select == '9':
-    #     sys.exit()       
-    # else:
-    #     print("Invalid option")
-    #     time.sleep(5)
-    #     clear(); menu()
-menu()
-#<--------------Menu End-------------->
+    select = input(f"{Fore.RED}                                                      Choice: ")
+    if select == '1' and counter == 0:
+        counter = counter + 1
+        load()
+        print("Script has been started")
+        time.sleep(2)
+        clear(); menu()
+    elif select == '1' and counter >= 1:
+        print("Script has already been started")
+        time.sleep(2)
+        clear(); menu()
+    elif select == '2':
+        clear(); menu()
+    elif select == '3':
+        print(".gg/uYCeDP3")
+        time.sleep(5)
+        clear(); menu()
+    elif select == '4':
+        clear(); menu()
+    elif select == '5':
+        clear(); menu()
+    elif select == '6':
+        clear(); menu()
+    elif select == '7':
+        clear(); menu()
+    elif select == '8':
+        clear(); menu()
+    elif select == '9':
+        sys.exit()
+    else:
+        print("Invalid option")
+        time.sleep(5)
+        clear(); menu()
 
+start_new_thread(menu, ())
 
-#<--------------Bot Start-------------->
+toast.show_toast(
+    "Thanks for using TMG SB",
+    f"Booted in " + time.strftime("%S"),
+    # icon_path=""
+    duration=20,
+)
+
 bot.run(token, bot=False)
-#<--------------Bot End-------------->
+
