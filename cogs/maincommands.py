@@ -1,5 +1,5 @@
 import discord
-import pyfiglet
+import discord.ext.commands
 import requests
 import io
 import aiohttp
@@ -15,6 +15,9 @@ import requests
 from http.client import HTTPException
 import base64
 import hashlib
+import time
+from datetime import datetime
+from pytz import timezone
 
 
 #<--------------Commands Start-------------->
@@ -22,15 +25,28 @@ class Commands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+
+    @commands.Cog.listener("on_command_error")
+    async def error_h(self, ctx: commands.Context, exc):
+        if isinstance(exc, ErrorClass): 
+            print("error")
+        elif isinstance(exc, ErrorClass):
+            print("error2")
+
     @commands.command()
     async def help(self, ctx):
         await ctx.message.delete()
         await ctx.send("```ini\n[utils] utilities\n[fun] fun stuff\n[encryption] encrypt stuff\n[activity] choose activity\n[nsfw] self explanitory\n[crypto] check cryptocurrency prices\n\n[TMG - MIDVITE]```", delete_after=8)
 
     @commands.command()
+    async def changelog(self, ctx):
+        await ctx.message.delete()
+        await ctx.send("```ini\n[changelog]\n\n[+] added changelog\n[+] added timezones\n[-] removed bugs\n\n[TMG - MIDVITE]```", delete_after=8)
+
+    @commands.command()
     async def utils(self, ctx):
         await ctx.message.delete()
-        await ctx.send("```ini\n[cl] clears messages\n[ascii] (message)\n[whois] whois command\n\n[TMG - MIDVITE]```", delete_after=8)
+        await ctx.send("```ini\n[cl] clears messages\n[ascii] (message)\n[whois] whois command\n[timeNow] shows current time\n[convertTime] converts time between timezones\n[lastMessage] shows a users last message\n\n[TMG - MIDVITE]```", delete_after=8)
 
     @commands.command()
     async def fun(self, ctx):
@@ -65,6 +81,11 @@ class Commands(commands.Cog):
                 "https://tenor.com/view/chad-cock-order-bbc-muscular-guy-gif-23529914", "https://giphy.com/gifs/EooFElWfrBWMO05mIi"]
         image = random.choice(choose)
         await ctx.send(image, delete_after=8)
+
+    @commands.command()
+    async def ping(self, ctx):
+        await ctx.message.delete()
+        await ctx.send(f'```Ping: {round(self.bot.latency * 1000)}```')
 
     @commands.command()
     async def ascii(self, ctx, *,text: str=None):
@@ -346,6 +367,105 @@ class Commands(commands.Cog):
         await ctx.message.delete()
         encoded = args.replace('e', '3').replace('a', '4').replace('i', '!').replace('u', '|_|').replace('U', '|_|').replace('E', '3').replace('I', '!').replace('A', '4').replace('o','0').replace('O','0').replace('t','7').replace('T','7').replace('l','1').replace('L','1').replace('k','|<').replace('K','|<').replace('CK','X').replace('ck','x').replace('Ck','X').replace('cK','x')
         await ctx.send(f'`{encoded}`')
+
+    @commands.command()
+    async def timeNow(self, ctx):
+        await ctx.message.delete()
+        fmt = "%Y-%m-%d %H:%M:%S %Z%z"
+
+        # Current time in UTC
+        now_utc = datetime.now(timezone('UTC'))
+        await ctx.send(now_utc.strftime(fmt) + " (UTC)", delete_after=8)
+
+        # Convert to Europe/London time zone
+        now_london = now_utc.astimezone(timezone('Europe/London'))
+        await ctx.send(now_london.strftime(fmt) + " (London)", delete_after=8)
+
+        # Convert to Europe/Berlin time zone
+        now_berlin = now_utc.astimezone(timezone('Europe/Berlin'))
+        await ctx.send(now_berlin.strftime(fmt) + " (Berlin)", delete_after=8)
+
+        # Convert to CET time zone
+        now_cet = now_utc.astimezone(timezone('CET'))
+        await ctx.send(now_cet.strftime(fmt) + " (CET)", delete_after=8)
+
+        # Convert to Israel time zone
+        now_israel = now_utc.astimezone(timezone('Israel'))
+        await ctx.send(now_israel.strftime(fmt) + " (Israel)", delete_after=8)
+
+        # Convert to Canada/Eastern time zone
+        now_canada_east = now_utc.astimezone(timezone('Canada/Eastern'))
+        await ctx.send(now_canada_east.strftime(fmt) + " (Canada/Eastern)", delete_after=8)
+
+        # Convert to US/Central time zone
+        now_central = now_utc.astimezone(timezone('US/Central'))
+        await ctx.send(now_central.strftime(fmt) + " (US/Central)", delete_after=8)
+
+        # Convert to US/Pacific time zone
+        now_pacific = now_utc.astimezone(timezone('US/Pacific'))
+        await ctx.send(now_pacific.strftime(fmt) + " (US/Pacific)", delete_after=8)
+
+
+    @commands.command()
+    async def convertTime(self, ctx, date_str):
+        await ctx.message.delete()
+        #date_str = "2009-05-05+22:28"
+        datetime_obj = datetime.strptime(date_str, "%Y-%m-%d+%H:%M")
+
+        fmt = "%Y-%m-%d %H:%M %Z%z"
+
+        # Current time in UTC
+        now_utc = datetime_obj.replace(tzinfo=timezone('UTC'))
+        await ctx.send(now_utc.strftime(fmt) + " (UTC)", delete_after=8)
+
+        # Convert to Europe/London time zone
+        now_london = now_utc.astimezone(timezone('Europe/London'))
+        await ctx.send(now_london.strftime(fmt) + " (London)", delete_after=8)
+
+        # Convert to Europe/Berlin time zone
+        now_berlin = now_utc.astimezone(timezone('Europe/Berlin'))
+        await ctx.send(now_berlin.strftime(fmt) + " (Berlin)", delete_after=8)
+
+        # Convert to CET time zone
+        now_cet = now_utc.astimezone(timezone('CET'))
+        await ctx.send(now_cet.strftime(fmt) + " (CET)", delete_after=8)
+
+        # Convert to Israel time zone
+        now_israel = now_utc.astimezone(timezone('Israel'))
+        await ctx.send(now_israel.strftime(fmt) + " (Israel)", delete_after=8)
+
+        # Convert to Canada/Eastern time zone
+        now_canada_east = now_utc.astimezone(timezone('Canada/Eastern'))
+        await ctx.send(now_canada_east.strftime(fmt) + " (Canada/Eastern)", delete_after=8)
+
+        # Convert to US/Central time zone
+        now_central = now_utc.astimezone(timezone('US/Central'))
+        await ctx.send(now_central.strftime(fmt) + " (US/Central)", delete_after=8)
+
+        # Convert to US/Pacific time zone
+        now_pacific = now_utc.astimezone(timezone('US/Pacific'))
+        await ctx.send(now_pacific.strftime(fmt) + " (US/Pacific)", delete_after=8)
+
+    @commands.command()
+    async def lastMessage(self, ctx, users_id: int):
+        await ctx.message.delete()
+        oldestMessage = None
+        for channel in ctx.guild.text_channels:
+            fetchMessage = await channel.history().find(lambda m: m.author.id == users_id)
+            if fetchMessage is None:
+                continue
+
+
+            if oldestMessage is None:
+                oldestMessage = fetchMessage
+            else:
+                if fetchMessage.created_at > oldestMessage.created_at:
+                    oldestMessage = fetchMessage
+
+        if (oldestMessage is not None):
+            await ctx.send(f"```ini\n[Message] {oldestMessage.content}\n\n[TMG - MIDVITE]```", delete_after=8)
+        else:
+            await ctx.send("```ini\n[Error] no message found\n\n[TMG - MIDVITE]```", delete_after=8)
 #<--------------Commands End-------------->
 
 

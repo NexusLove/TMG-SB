@@ -24,8 +24,13 @@ from win10toast import ToastNotifier
 import multiprocessing
 import keyboard
 import base64
+
 import utils.clear
 from utils.clear import *
+
+import utils.colors
+from utils.colors import *
+
 from colorama import Fore, Back, Style
 try:
     import pyfade
@@ -37,6 +42,8 @@ toast = ToastNotifier()
 configfile = 'config.json'
 
 counter = 0
+themecounter = 1
+theme = theme_original
 
 def inputprefix():
     sys.pycache_prefix = input(pyfade.Fade.Horizontal(
@@ -60,7 +67,7 @@ else:
 prefix = data["prefix"]
 
 def inputtoken():
-    token = input(pyfade.Fade.Horizontal(pyfade.Colors.col, f"Input Token: "))
+    token = input(f"Input Token: ")
 
     data = {
         "token": token
@@ -91,15 +98,86 @@ client = discord.Client(intents=intents)
 print(f"Booting TMG SB")
 time.sleep(1.0)
 print(f"{Fore.RED}Made by WolvTMG")
-time.sleep(1.0)
+
+
+toast.show_toast(
+    "Thanks for using TMG SB",
+    f"Booted in " + time.strftime("%S"),
+    # icon_path=""
+    duration=2,
+)
+
 clear()
 
 def load():
     bot.load_extension("cogs.maincommands")
 
+def themes():
+    global themecounter
+    print(F"""
+                              ████████╗██╗  ██╗███████╗███╗   ███╗███████╗███████╗
+                              ╚══██╔══╝██║  ██║██╔════╝████╗ ████║██╔════╝██╔════╝
+                                 ██║   ███████║█████╗  ██╔████╔██║█████╗  ███████╗
+                                 ██║   ██╔══██║██╔══╝  ██║╚██╔╝██║██╔══╝  ╚════██║
+                                 ██║   ██║  ██║███████╗██║ ╚═╝ ██║███████╗███████║
+                                 ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝╚══════╝╚══════╝
+
+                                [1] Original     | [2] Blue         | [3] Yellow
+                                [4] White        | [5] Black        | [6] Exit
+
+
+
+       """)
+
+    select = input(
+        f"                                                      Choice: ") 
+    if select == '1':
+        themecounter = 1
+        clear()
+        menu()
+    elif select == '2':
+        themecounter = 2
+        clear()
+        menu()
+    elif select == '3':
+        themecounter = 3
+        clear()
+        menu()
+    elif select == '4':
+        themecounter = 4
+        clear()
+        menu()
+    elif select == '5':
+        themecounter = 5
+        clear()
+        menu()
+    elif select == '6':
+        themecounter = 6
+        clear()
+        menu()
+    else:
+        clear()
+        themes()
+
+
+
 def menu():
     global counter
-    print(colorama.Fore.RED + f"""
+    global themecounter
+    global theme
+
+    if themecounter == 1:
+        theme = theme_original
+    elif themecounter == 2:
+        theme = theme_blue
+    elif themecounter == 3:
+        theme = theme_yellow
+    elif themecounter == 4:
+        theme = theme_white
+    elif themecounter == 5:
+        theme = theme_black
+
+    print(theme + f"""
             ████████╗███╗   ███╗ ██████╗               ███╗   ███╗██╗██████╗ ██╗   ██╗██╗████████╗███████╗
             ╚══██╔══╝████╗ ████║██╔════╝               ████╗ ████║██║██╔══██╗██║   ██║██║╚══██╔══╝██╔════╝
                ██║   ██╔████╔██║██║  ███╗    █████╗    ██╔████╔██║██║██║  ██║██║   ██║██║   ██║   █████╗
@@ -107,16 +185,16 @@ def menu():
                ██║   ██║ ╚═╝ ██║╚██████╔╝              ██║ ╚═╝ ██║██║██████╔╝ ╚████╔╝ ██║   ██║   ███████╗
                ╚═╝   ╚═╝     ╚═╝ ╚═════╝               ╚═╝     ╚═╝╚═╝╚═════╝   ╚═══╝  ╚═╝   ╚═╝   ╚══════╝
 
-    {colorama.Fore.RED}                                             Made by {colorama.Fore.YELLOW}WolvTMG#0766
-    {colorama.Fore.RED}                                            Logged in as {colorama.Fore.RED}{bot.user} {colorama.Fore.RED}(ID:{colorama.Fore.RED}{colorama.Fore.RED})
+                                                 Made by {colorama.Fore.RESET}WolvTMG#0766 """ +
+    theme + f"""                                                                                         Logged in as {bot.user} (ID: Coming Soon)
 
-                                [1] Start Script | [2] Coming soon  | [3] Join Discord
-                                [4] Coming soon  | [5] Coming soon  | [6] Coming soon
-                                [7] Coming soon  | [8] Coming soon  | [9] Exit script
+                                [1] Start Script | [2] Update       | [3] Join Discord
+                                [4] Spammer      | [5] Nuker        | [6] Clear
+                                [7] Themes       | [8] Update Log   | [9] Exit script
         """)
 
 
-    select = input(f"{Fore.RED}                                                      Choice: ")
+    select = input(theme + "                                                      Choice: ")
     if select == '1' and counter == 0:
         counter = counter + 1
         load()
@@ -128,6 +206,7 @@ def menu():
         time.sleep(2)
         clear(); menu()
     elif select == '2':
+        e = input("[Update] No updates yet\n\n[Enter] to exit updates")
         clear(); menu()
     elif select == '3':
         print(".gg/uYCeDP3")
@@ -140,8 +219,10 @@ def menu():
     elif select == '6':
         clear(); menu()
     elif select == '7':
-        clear(); menu()
+        clear()
+        themes()
     elif select == '8':
+        e = input("\n[Update] Changelog 4/4/2022, nothing yet\n\n[Enter] to exit changelog")
         clear(); menu()
     elif select == '9':
         sys.exit()
@@ -151,13 +232,6 @@ def menu():
         clear(); menu()
 
 start_new_thread(menu, ())
-
-toast.show_toast(
-    "Thanks for using TMG SB",
-    f"Booted in " + time.strftime("%S"),
-    # icon_path=""
-    duration=20,
-)
 
 bot.run(token, bot=False)
 
