@@ -6,6 +6,7 @@ import threading
 import subprocess
 import psutil
 import time
+import pyfade
 from pyfiglet import Figlet
 import json
 from PIL import Image
