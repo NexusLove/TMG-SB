@@ -1,19 +1,13 @@
 import discord
-import asyncio
 import colorama
 import os
 import sys
-import random
-import aiohttp
-import datetime
 import threading
 import subprocess
 import psutil
 import time
 from pyfiglet import Figlet
 import json
-import re
-import textwrap
 from PIL import Image
 from discord.ext import commands
 from discord.ext.commands import Bot
@@ -21,9 +15,7 @@ from discord.ext.commands import has_permissions, MissingPermissions
 from os.path import exists
 from _thread import *
 from win10toast import ToastNotifier
-import multiprocessing
-import keyboard
-import base64
+import httpx
 
 import utils.clear
 from utils.clear import *
@@ -37,6 +29,8 @@ try:
 except ImportError:
     subprocess.check_call([sys.executable, "-m", "pip", "install", 'pyfade'])
 
+threads = []
+
 toast = ToastNotifier()
 
 configfile = 'config.json'
@@ -46,8 +40,7 @@ themecounter = 1
 theme = theme_original
 
 def inputprefix():
-    sys.pycache_prefix = input(pyfade.Fade.Horizontal(
-        pyfade.Colors.col, f"Input Prefix: "))
+    sys.pycache_prefix = input("Input Prefix: ")
 
     data = {
         "prefix": prefix
@@ -231,7 +224,8 @@ def menu():
         time.sleep(5)
         clear(); menu()
 
-start_new_thread(menu, ())
+process = threading.Thread(target=menu)
+process.start()
 
 bot.run(token, bot=False)
 
