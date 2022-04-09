@@ -5,8 +5,6 @@ import sys
 import threading
 import subprocess
 import time
-import pyfade
-from pystyle import Colors, Colorate
 from pyfiglet import Figlet
 import json
 from PIL import Image
@@ -24,7 +22,7 @@ import utils.colors
 from utils.colors import *
 
 from colorama import Fore, Back, Style
-
+import pyfade
 
 threads = []
 
