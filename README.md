@@ -5,7 +5,7 @@ TMG SB
 * ` Fast and efficent`
 * ` Recieves updates`
 
-##TMG SB was made by WolvTMG**
+** TMG SB was made by WolvTMG**
 
 Discord: WolvTMG#0766
 
