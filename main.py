@@ -4,9 +4,7 @@ import os
 import sys
 import threading
 import subprocess
-import psutil
 import time
-import pyfade
 from pyfiglet import Figlet
 import json
 from PIL import Image
@@ -16,7 +14,6 @@ from discord.ext.commands import has_permissions, MissingPermissions
 from os.path import exists
 from _thread import *
 from win10toast import ToastNotifier
-import httpx
 
 import utils.clear
 from utils.clear import *
@@ -25,10 +22,8 @@ import utils.colors
 from utils.colors import *
 
 from colorama import Fore, Back, Style
-try:
-    import pyfade
-except ImportError:
-    subprocess.check_call([sys.executable, "-m", "pip", "install", 'pyfade'])
+import pyfade
+
 
 threads = []
 
