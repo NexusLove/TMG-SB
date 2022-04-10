@@ -5,7 +5,6 @@ import sys
 import threading
 import subprocess
 import time
-import pystyle
 from pyfiglet import Figlet
 import json
 from PIL import Image
