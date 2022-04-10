@@ -2,6 +2,7 @@
 <p align="center">
 For educational purposes only
 </p>
+
 ---
 * ` Settings (Color Theme, Prefix Choice)`
 * ` Easy to use`
