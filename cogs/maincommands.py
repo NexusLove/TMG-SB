@@ -4,7 +4,6 @@ import requests
 import io
 import aiohttp
 import warnings
-import colorama
 from discord.ext import commands
 import random
 import sys
@@ -18,25 +17,35 @@ import hashlib
 import time
 from datetime import datetime
 from pytz import timezone
+from utils.clear import *
 
 
-#<--------------Commands Start-------------->
 class Commands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    @commands.Cog.listener()
+    async def on_command_error(self, ctx: commands.Context, error: commands.CommandError):
 
-    @commands.Cog.listener("on_command_error")
-    async def error_h(self, ctx: commands.Context, exc):
-        if isinstance(exc, ErrorClass): 
-            print("error")
-        elif isinstance(exc, ErrorClass):
-            print("error2")
+        if isinstance(error, commands.CommandOnCooldown):
+            message = f"This command is on cooldown. Please try again after {round(error.retry_after, 1)} seconds."
+        elif isinstance(error, commands.MissingPermissions):
+            message = "You are missing the required permissions to run this command!"
+        elif isinstance(error, commands.MissingRequiredArgument):
+            message = f"Missing a required argument: {error.param}"
+        elif isinstance(error, commands.ConversionError):
+            message = str(error)
+        elif isinstance(error, commands.CommandNotFound):
+            message = "[ERROR] Command not found"
+        else:
+            message = "Oh no! Something went wrong while running the command!"
+
+        print("\n", message)
 
     @commands.command()
     async def help(self, ctx):
         await ctx.message.delete()
-        await ctx.send("```ini\n[utils] utilities\n[fun] fun stuff\n[encryption] encrypt stuff\n[activity] choose activity\n[nsfw] self explanitory\n[crypto] check cryptocurrency prices\n\n[TMG - MIDVITE]```", delete_after=8)
+        await ctx.send("```ini\n[utils] utilities\n[fun] fun stuff\n[encryption] encrypt stuff\n[activity] choose activity\n[nsfw] self explanitory\n[crypto] check cryptocurrency prices\n[changelog] check updates\n\n[TMG - MIDVITE]```", delete_after=8)
 
     @commands.command()
     async def changelog(self, ctx):
@@ -91,7 +100,7 @@ class Commands(commands.Cog):
     async def ascii(self, ctx, *,text: str=None):
         await ctx.message.delete()
         if text is None:
-            await ctx.send("```init\nInvalid argument\n\n[TMG - MIDVITE]", delete_after=20)
+            await ctx.send("```ini\nInvalid argument\n\n[TMG - MIDVITE]```", delete_after=20)
         else:
             f = Figlet(font='Slant')
             j = (f.renderText(text))
@@ -466,7 +475,6 @@ class Commands(commands.Cog):
             await ctx.send(f"```ini\n[Message] {oldestMessage.content}\n\n[TMG - MIDVITE]```", delete_after=8)
         else:
             await ctx.send("```ini\n[Error] no message found\n\n[TMG - MIDVITE]```", delete_after=8)
-#<--------------Commands End-------------->
 
 
 def setup(bot):

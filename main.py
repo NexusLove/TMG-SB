@@ -15,14 +15,10 @@ from discord.ext.commands import has_permissions, MissingPermissions
 from os.path import exists
 from _thread import *
 from win10toast import ToastNotifier
-
-import utils.clear
+from colorama import Fore, Back, Style
 from utils.clear import *
-
-import utils.colors
 from utils.colors import *
 
-from colorama import Fore, Back, Style
 
 threads = []
 
@@ -35,7 +31,7 @@ themecounter = 1
 theme = theme_original
 
 def inputprefix():
-    sys.pycache_prefix = input("Input Prefix: ")
+    input("Input Prefix: ")
 
     data = {
         "prefix": prefix
