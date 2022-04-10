@@ -1,6 +1,7 @@
 # TMG SB
 
 For educational purposes only
+
 ---
 * ` Settings (Color Theme)`
 * ` Easy to use`
